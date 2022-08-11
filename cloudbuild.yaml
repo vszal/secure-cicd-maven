@@ -51,7 +51,7 @@ steps:
     entrypoint: gcloud
     args: 
       [
-        "beta", "deploy", "releases", "create", "rel-${SHORT_SHA}",
+        "deploy", "releases", "create", "rel-${SHORT_SHA}",
         "--delivery-pipeline", "${_PIPELINE_NAME}",
         "--region", "us-central1",
         "--annotations", "commitId=${REVISION_ID}",
@@ -63,4 +63,3 @@ options:
   requestedVerifyOption: VERIFIED
   pool:
     name: 'projects/$PROJECT_ID/locations/us-central1/workerPools/private-pool'
-    
