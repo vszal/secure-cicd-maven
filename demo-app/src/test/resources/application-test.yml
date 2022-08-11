@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: "jdbc:tc:postgresql:13:///quotes?TC_TMPFS=/testtmpfs:rw"
+
+        

@@ -1,0 +1,32 @@
+# Overview: demonstrates TestContainers integration test on a maven app,
+# deploys to Cloud Run in final step
+# substitutions:
+#   _REPO_NAME: demo-app
+#   _APP_NAME: demo-app
+# CLI: gcloud builds submit --config=cloudbuild-cloudrun.yaml --substitutions=_REPO_NAME="maven-demo-app",_APP_NAME="demo-app"
+steps:
+  # integration tests via TestContainers
+  - name: maven:3-eclipse-temurin-17
+    entrypoint: mvn
+    args: ["verify"]
+    dir: ${_APP_NAME}
+  # build app with Maven
+  - name: maven:3-eclipse-temurin-17
+    entrypoint: mvn
+    args: ["package", "-Dmaven.test.skip=true"]
+    dir: ${_APP_NAME}
+  # Build and tag using commit sha
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '.', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_APP_NAME}:latest', '-f', 'Dockerfile']
+    dir: ${_APP_NAME}
+  # Push the container image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_APP_NAME}:latest']
+  # Deploy container image to Cloud Run
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args: ['run', 'deploy', '${_APP_NAME}', '--image', 'us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_APP_NAME}:latest', '--binary-authorization', 'default', '--region', 'us-central1', '--platform', 'managed', '--memory', '1Gi']
+images:
+- us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_APP_NAME}:latest
+options:
+  requestedVerifyOption: VERIFIED
