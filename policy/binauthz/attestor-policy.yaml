@@ -3,5 +3,5 @@ defaultAdmissionRule:
   evaluationMode: REQUIRE_ATTESTATION
   requireAttestationsBy:
   - projects/vsz-demo/attestors/built-by-cloud-build
-  - projects/vsz-demo/attestors/build-vuln-check
+  - projects/vsz-demo/attestors/vulnz-attestor
 name: projects/vsz-demo/policy
