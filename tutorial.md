@@ -61,6 +61,8 @@ To keep file changes you make in Cloud Shell in sync with your repo, you can che
 Now that your Github repo is setup, configure Cloud Build to run each time a change is pushed to the main branch. To do this, add a Trigger in Cloud Build:
   * Navigate to [Cloud Build triggers page](https://console.cloud.google.com/cloud-build/triggers)
   * Follow the [docs](https://cloud.google.com/build/docs/automating-builds/build-repos-from-github) and create a Github App connected repo and trigger.
+  * Configuration --> Type: select "Cloud Build configuration file"
+  * Configuration --> Location: ensure Repository and "/cloudbuild.yaml" is selected.
 
 ## Create GKE clusters
 You'll need GKE clusters to deploy to. The Google Cloud Deploy pipeline in this example refers to two clusters:
