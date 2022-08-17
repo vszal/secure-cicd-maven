@@ -48,15 +48,16 @@ steps:
     id: vulnsign
   # Create release in Google Cloud Deploy
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
-    entrypoint: gcloud
-    args: 
-      [
-        "deploy", "releases", "create", "rel-${SHORT_SHA}",
-        "--delivery-pipeline", "${_PIPELINE_NAME}",
-        "--region", "us-central1",
-        "--annotations", "commitId=${REVISION_ID}",
-        "--images", "${_APP_NAME}=us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_APP_NAME}:${COMMIT_SHA}"
-      ]
+    entrypoint: /bin/bash
+    args:
+    - -c
+    - |
+      gcloud deploy releases create rel-${SHORT_SHA} \
+      --delivery-pipeline=${_PIPELINE_NAME} \
+      --region=us-central1 \
+      --annotations=commitId=${REVISION_ID} \
+      --images=${_APP_NAME}=$(/bin/cat image-digest.txt)
+    waitFor: ['vulnsign']
 images:
 - us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_APP_NAME}:${COMMIT_SHA}
 options:
