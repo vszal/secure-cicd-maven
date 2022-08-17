@@ -59,10 +59,10 @@ To keep file changes you make in Cloud Shell in sync with your repo, you can che
 
 ## Setup a Cloud Build trigger for your repo
 Now that your Github repo is setup, configure Cloud Build to run each time a change is pushed to the main branch. To do this, add a Trigger in Cloud Build:
-  * Navigate to [Cloud Build triggers page](https://console.cloud.google.com/cloud-build/triggers)
-  * Follow the [docs](https://cloud.google.com/build/docs/automating-builds/build-repos-from-github) and create a Github App connected repo and trigger.
-  * Configuration --> Type: select "Cloud Build configuration file"
-  * Configuration --> Location: ensure Repository and "/cloudbuild.yaml" is selected.
+1. Navigate to [Cloud Build triggers page](https://console.cloud.google.com/cloud-build/triggers)
+2. Follow the [docs](https://cloud.google.com/build/docs/automating-builds/build-repos-from-github) and create a Github App connected repo and trigger.
+3. Configuration --> Type: select "Cloud Build configuration file"
+4. Configuration --> Location: ensure Repository and "/cloudbuild.yaml" is selected.
 
 ## Create GKE clusters
 You'll need GKE clusters to deploy to. The Google Cloud Deploy pipeline in this example refers to two clusters:
@@ -87,10 +87,11 @@ Note that these clusters are created asynchronously, so check on the [GKE UI]("h
 ## IAM and service account setup
 You must give Cloud Build explicit permission to trigger a Google Cloud Deploy release.
 1. Read the [docs](https://cloud.google.com/deploy/docs/integrating)
-2. Navigate to [IAM](https://console.cloud.google.com/iam-admin/iam) and locate your Cloud Build service account
-3. Add these two roles
+2. Navigate to [IAM](https://console.cloud.google.com/iam-admin/iam) and locate your Cloud Build service account. Add these two roles
   * Cloud Deploy Releaser
   * Service Account User
+3. Locate your Compute service account. Add thos role
+  * Cloud Deploy Runner
 
 ## Kritis Signer and attestor setup
 
@@ -138,7 +139,7 @@ For more docs, see: https://cloud.google.com/binary-authorization/docs/setting-u
 ## Add substitutions to the Cloud Build Trigger
 During a previous step you created a Github trigger for the build. While the following substitutions can be added directly to the cloudbuild file, it’s a bit safer to add these to the trigger itself.
 
-1. Open the Cloud Build trigger UI
+1. Open the [Cloud Build trigger UI](https://console.cloud.google.com/cloud-build/triggers;region=us-central1)
 * Find and edit your trigger in the UI. If you don’t see it, make sure you select the region you set up the trigger in.
 
 2. Click the 3 dots menu → Edit
