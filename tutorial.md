@@ -94,13 +94,76 @@ You must give Cloud Build explicit permission to trigger a Google Cloud Deploy r
 
 ## Kritis Signer and attestor setup
 
-This section is WIP
-See: https://cloud.google.com/binary-authorization/docs/creating-attestations-kritis
+As part of the CI/CD pipeline, the image generated will be scanned for vulnerabilities. We’ll be using Kritis Signer as a “Cloud Builder” to vet created images against a vulnerability threshold policy and fail our builds if the vulnerability threshold is exceeded.
 
-## Binary Authorization policy
 
-This section is WIP
-See: https://cloud.google.com/binary-authorization/docs/setting-up
+Follow the [doc steps](https://cloud.google.com/binary-authorization/docs/creating-attestations-kritis#set_up_the_kritis_signer_custom_builder) to create a Kritis signer custom builder image:
+* Navigate outside the secure-cicd-maven project area and clone the Kritis repo
+* Navigate into the Kritis folder
+* Create your Kritis signer cloud builder (this will push the Kritis signer image to gcr.io/YOUR_PROJECT/kritis:latest).
+
+## Set up the Kritis Signer Binary Authorization attestor
+
+Beyond just failing the build, we can also have Kritis Signer create a Binary Authorization attestation that the image passed vulnerability thresholds. This will be used for admission control during deployment later.	
+
+
+1. Create signing keys used, steps 1 and 2 in [this doc](https://cloud.google.com/architecture/binary-auth-with-cloud-build-and-gke#creating_signing_keys):
+* Create a key ring, make note of the resource location
+* Create a signing signing key, make note of the resource location
+
+2. Create the vulnerability signing note and attestor [per these docs, steps 1-6](https://cloud.google.com/architecture/binary-auth-with-cloud-build-and-gke#create_the_vulnerability_scanner_attestation)
+Please name your attestor “vulnz-attestor” during step 3.
+* Make note of the attestor's "note" resource location
+
+
+3. Verify that your new attestor appears in the [console UI](https://console.cloud.google.com/security/binary-authorization/attestors):
+If you’ve already created your Kritis signer Cloud Builder in the previous section, then you should see two attestors:
+* vulnz-attestor (Your newly created attestor)
+* built-by-cloud-build attestor (system generated)
+
+## Setup Binary Authorization policy
+
+Now that you have some attestors, you can create a Binary Authorization policy that restricts deployments to only those images that have the two attestations.
+
+1. From the root of the repo, run:
+
+```bash
+gcloud container binauthz policy import policy/binauthz/attestor-policy.yaml
+```
+
+2. Verify that your policy is in place by visiting the [Binary Authorization UI](https://console.cloud.google.com/security/binary-authorization/policy).
+
+For more docs, see: https://cloud.google.com/binary-authorization/docs/setting-up
+
+## Add substitutions to the Cloud Build Trigger
+During a previous step you created a Github trigger for the build. While the following substitutions can be added directly to the cloudbuild file, it’s a bit safer to add these to the trigger itself.
+
+1. Open the Cloud Build trigger UI
+* Find and edit your trigger in the UI. If you don’t see it, make sure you select the region you set up the trigger in.
+
+2. Click the 3 dots menu → Edit
+
+3. Scroll to the Advanced section and add these three variables:
+* Variable 1: _KMS_DIGEST_ALG (value will be "SHA512" or "SHA256", depending on your key)
+* Variable 2: _KMS_KEY_NAME (value will look like: projects/vsz-demo/locations/global/keyRings/RING-NAME/cryptoKeys/YOUR-KEY/cryptoKeyVersions/1)
+* Variable 3: _NOTE_NAME (value will look like: projects/vsz-demo/notes/NOTE-NAME)
+
+You can find the last two values in the vulnz-attestor in the [Binary Authorization attestor list UI](https://console.cloud.google.com/security/binary-authorization/attestors?). 
+
+## Set up a Cloud Build private pool
+[Private pools](https://cloud.google.com/build/docs/private-pools/private-pools-overview) provide added security where builds will run with custom parameters including networks (VPC peering).
+
+1. Go to the [Cloud Build worker pool UI](https://console.cloud.google.com/cloud-build/settings/worker-pool)
+2. Click Create
+3. Use these parameters:
+* Name: private-pool
+* Region: us-central1
+* Machine type: e2-medium
+* Available disk size: 100 GB
+* Project: (leave blank)
+* Network: (leave blank)
+* Assign external IPs: checked
+4. Click save
 
 ## Demo Overview
 
