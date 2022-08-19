@@ -41,6 +41,15 @@ Run the initialization script:
 Verify that the Google Cloud Deploy pipeline was created in the 
 [Google Cloud Deploy UI](https://console.cloud.google.com/deploy/delivery-pipelines)
 
+## Authorize your docker to push/pull to Artifact registry
+Before you can push or pull images, configure Docker to use the Google Cloud CLI to authenticate requests to Artifact Registry.
+
+To set up authentication to Docker repositories in the region us-central1, run the following command:
+
+```bash
+gcloud auth configure-docker us-central1-docker.pkg.dev
+```
+
 ## Turn on automated container vulnerability analysis
 Google Cloud Container Analysis can be set to automatically scan for vulnerabilities on push (see [pricing](https://cloud.google.com/container-analysis/pricing)). 
 
