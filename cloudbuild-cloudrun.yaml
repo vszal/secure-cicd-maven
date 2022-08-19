@@ -1,9 +1,9 @@
 # Overview: demonstrates TestContainers integration test on a maven app,
 # deploys to Cloud Run in final step
-# substitutions:
-#   _REPO_NAME: demo-app
-#   _APP_NAME: demo-app
-# CLI: gcloud builds submit --config=cloudbuild-cloudrun.yaml --substitutions=_REPO_NAME="maven-demo-app",_APP_NAME="demo-app"
+# CLI: gcloud builds submit . --config=cloudbuild-cloudrun.yaml
+substitutions:
+  _REPO_NAME: maven-demo-app
+  _APP_NAME: demo-app
 steps:
   # integration tests via TestContainers
   - name: maven:3-eclipse-temurin-17
