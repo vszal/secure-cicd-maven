@@ -8,19 +8,6 @@ build:
   artifacts:
   - image: demo-app
     context: demo-app
-    # buildpacks:
-    # # Google Buildpacks
-    #   builder: "gcr.io/buildpacks/builder:v1"
-    # Paketo Buildpacks
-    #  builder: "paketobuildpacks/builder:base"
-    # JIB  
-    # jib:
-    #   type: maven
-    #   args: 
-    #   - --no-transfer-progress
-    #   - -Psync      
-    #   - -Dmaven.test.skip=true
-    # Dockerfile - multi-layer
     docker:
       dockerfile: Dockerfile    
     sync:
@@ -50,3 +37,7 @@ profiles:
       kustomize:
         paths:
           - k8s/overlays/prod
+portForward:
+- resourceType: deployment
+  resourceName: demo-app
+  port: 8080
