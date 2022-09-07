@@ -1,5 +1,5 @@
 # GCP CI/CD security demo and tutorial 
-This repo demostrates a security focused CI/CD pipeline for GKE with Google Cloud tools Cloud Build, Binary Authorization, Artifact Registry, Container Analysis, and Google Cloud Deploy. The example app is a simple containerized Maven example app with Kustomize overlays for Kubernetes manifest rendering.
+This repo demostrates a security focused CI/CD pipeline for GKE with Google Cloud tools Cloud Build, Binary Authorization, Artifact Registry, Container Analysis, and Google Cloud Deploy. The example app is a simple containerized Maven example app with Kustomize overlays for Kubernetes manifest rendering!
 
 [![Google Cloud Software Supply Chain Security Demo Flow](https://user-images.githubusercontent.com/76225123/170594159-cae11896-5ac1-473c-8d71-924a8d059155.png)](https://user-images.githubusercontent.com/76225123/170594159-cae11896-5ac1-473c-8d71-924a8d059155.png)
 
