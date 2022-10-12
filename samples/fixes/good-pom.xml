@@ -52,12 +52,17 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.13.3</version>
+      <version>2.14.0-rc2</version>
     </dependency>
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
       <version>1.32</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>3.19.6</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -173,6 +178,13 @@
         <version>3.1.2</version>
       </plugin>      
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>com.google.cloud.artifactregistry</groupId>
+        <artifactId>artifactregistry-maven-wagon</artifactId>
+        <version>2.1.5</version>
+      </extension>
+    </extensions>
   </build>
 
   <!--  Spring profiles-->
@@ -225,5 +237,29 @@
             <scope>import</scope>
         </dependency>              
       </dependencies>
-  </dependencyManagement>  
+  </dependencyManagement>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>artifact-registry</id>
+      <url>artifactregistry://us-central1-maven.pkg.dev/vsz-demo/remote-maven</url>
+    </snapshotRepository>
+    <repository>
+      <id>artifact-registry</id>
+      <url>artifactregistry://us-central1-maven.pkg.dev/vsz-demo/remote-maven</url>
+    </repository>
+  </distributionManagement>
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Maven Central remote repository</name>
+      <url>artifactregistry://us-central1-maven.pkg.dev/vsz-demo/remote-maven</url>
+      <layout>default</layout>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 </project>
