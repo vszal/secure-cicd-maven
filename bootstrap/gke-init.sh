@@ -5,10 +5,10 @@ if [[ -z "${PROJECT_ID}" ]]; then
   return
 fi
 
-# Test cluster
-echo "creating test-sec..."
+# staging cluster
+echo "creating stage-quotes..."
 
-gcloud beta container --project "${PROJECT_ID}" clusters create "test-sec" \
+gcloud beta container --project "${PROJECT_ID}" clusters create "stage-quotes" \
 --zone "us-central1-a" --no-enable-basic-auth  \
 --release-channel "rapid" --machine-type "g1-small" --image-type "COS_CONTAINERD" \
 --disk-type "pd-standard" --disk-size "30" --metadata disable-legacy-endpoints=true \
@@ -23,8 +23,8 @@ gcloud beta container --project "${PROJECT_ID}" clusters create "test-sec" \
 
 
 # Prod cluster
-echo "creating prod-sec..."
-gcloud beta container --project "$PROJECT_ID" clusters create "prod-sec" \
+echo "creating prod-quotes..."
+gcloud beta container --project "$PROJECT_ID" clusters create "prod-quotes" \
 --zone "us-central1-a" --no-enable-basic-auth  \
 --release-channel "rapid" --machine-type "g1-small" --image-type "COS_CONTAINERD" \
 --disk-type "pd-standard" --disk-size "30" --metadata disable-legacy-endpoints=true \

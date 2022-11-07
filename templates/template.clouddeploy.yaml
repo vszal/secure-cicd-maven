@@ -2,28 +2,28 @@
 apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
 metadata:
-  name: security-demo-pipeline
-description: Security-focused CI/CD pipeline on GCP
+  name: quote-pipeline
+description: Quote rotation sample app pipeline
 serialPipeline:
  stages:
- - targetId: test-sec
- - targetId: prod-sec
+ - targetId: stage-quotes
+ - targetId: prod-quotes
 ---
 
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
-  name: test-sec
-description: test cluster
+  name: stage-quotes
+description: staging cluster
 gke:
-  cluster: projects/project-id-here/locations/us-central1-a/clusters/test-sec
+  cluster: projects/project-id-here/locations/us-central1-a/clusters/stage-quotes
 ---
 
 apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
-  name: prod-sec
-description: prod cluster
+  name: prod-quotes
+description: production cluster
 requireApproval: true
 gke:
-  cluster: projects/project-id-here/locations/us-central1-a/clusters/prod-sec
+  cluster: projects/project-id-here/locations/us-central1-a/clusters/prod-quotes
